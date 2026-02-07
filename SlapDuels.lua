@@ -237,26 +237,3 @@ Tab:CreateKeybind({
         end
     end
 })
-
-Tab:CreateSection("Extra")
-
-local autoReExecuteOnTeleport = false
-
-Tab:CreateToggle({
-    Name = "Auto Re-Execute on Server Hop",
-    CurrentValue = false,
-    Callback = function(Value)
-        autoReExecuteOnTeleport = Value
-    end
-})
-
--- This code gets copied and executed again after teleport
-local reexecutionCode = [[
-loadstring(game:HttpGet("https://raw.githubusercontent.com/YOUR_USERNAME/YOUR_REPO/main/yourscript.lua"))()
-]]
-
-player.OnTeleport:Connect(function(teleportState)
-    if teleportState == Enum.TeleportState.Started and autoReExecuteOnTeleport then
-        queue_on_teleport(reexecutionCode)
-    end
-end)
