@@ -1,0 +1,89 @@
+local Players = game:GetService("Players")
+local player = Players.LocalPlayer
+local character = player.Character or player.CharacterAdded:Wait()
+local hrp = character:WaitForChild("HumanoidRootPart")
+local humanoid = character:WaitForChild("Humanoid")
+local UserInputService = game:GetService("UserInputService")
+local RunService = game:GetService("RunService")
+
+local Rayfield = loadstring(game:HttpGet("https://sirius.menu/rayfield"))()
+local Window = Rayfield:CreateWindow({
+	Name = "Slap Duels",
+	LoadingTitle = "Slap Duels",
+	LoadingSubtitle = "Made by WeloSkids",
+	ConfigurationSaving = { Enabled = false }
+})
+local Tab = Window:CreateTab("Actions", 4483362458)
+
+-- Blink to Goal
+local function getParts()
+	local startPart = workspace:FindFirstChild("StartPart", true)
+	local endPart = workspace:FindFirstChild("EndPart", true)
+	return startPart, endPart
+end
+
+local function blinkToPart(part)
+	if not part or not part:IsA("BasePart") then return end
+	local originalCFrame = hrp.CFrame
+	hrp.CFrame = part.CFrame + Vector3.new(0,3,0)
+	task.wait(0.50)
+	if part:FindFirstChildOfClass("TouchInterest", true) then
+		firetouchinterest(hrp, part, 0)
+		firetouchinterest(hrp, part, 1)
+	end
+	hrp.CFrame = originalCFrame
+end
+
+Tab:CreateButton({
+	Name = "Teleport to Goal",
+	Callback = function()
+		local startPart, endPart = getParts()
+		if not startPart or not endPart then
+			Rayfield:Notify({
+				Title = "Please enter a game first",
+				Content = "This will not activate in lobby",
+				Duration = 3
+			})
+			return
+		end
+		local distStart = (startPart.Position - hrp.Position).Magnitude
+		local distEnd = (endPart.Position - hrp.Position).Magnitude
+		if distStart < distEnd then
+			blinkToPart(endPart)
+		else
+			blinkToPart(startPart)
+		end
+	end
+})
+Tab:CreateLabel("⚠ Wait 9 seconds before using ⚠")
+
+-- Disable Anticheat
+Tab:CreateButton({
+	Name = "Disable Anticheat",
+	Callback = function()
+		local ReplicatedStorage = game:GetService("ReplicatedStorage")
+		local packages = ReplicatedStorage:FindFirstChild("Packages")
+		if not packages then
+			Rayfield:Notify({Title="Error", Content="Anticheat has already been disabled", Duration=3})
+			return
+		end
+		local knit = packages:FindFirstChild("Knit")
+		if not knit then
+			Rayfield:Notify({Title="Error", Content="'Knit' folder not found", Duration=3})
+			return
+		end
+		local services = knit:FindFirstChild("Services")
+		if not services then
+			Rayfield:Notify({Title="Error", Content="'Services' folder not found", Duration=3})
+			return
+		end
+		local antiCheat = services:FindFirstChild("AntiCheatService")
+		if antiCheat then
+			antiCheat:Destroy()
+			Rayfield:Notify({Title="Success", Content="AntiCheat disabled", Duration=3})
+		else
+			Rayfield:Notify({Title="Error", Content="AntiCheat has already been disabled", Duration=3})
+		end
+	end
+})
+Tab:CreateLabel("⚠ Do this first to avoid detection ⚠")
