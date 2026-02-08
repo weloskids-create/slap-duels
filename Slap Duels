@@ -240,26 +240,40 @@ Tab:CreateKeybind({
 
 
 
-Tab:CreateSection("Extra / Auto Execute")
-
-local enableAutoReExec = false
+Tab:CreateSection("Misc")
 
 Tab:CreateToggle({
     Name = "Auto Execute on Server Hop",
     CurrentValue = false,
-    Callback = function(Value)
-        enableAutoReExec = Value
+    Callback = function(value)
+        getgenv().AutoReExec = value
+        
+        if value then
+            Rayfield:Notify({
+                Title = "Auto Execute",
+                Content = "Enabled ",
+                Duration = 4
+            })
+        else
+            Rayfield:Notify({
+                Title = "Auto Execute",
+                Content = "Disabled",
+                Duration = 3
+            })
+        end
     end
 })
 
-
-local reexecCode = [[
-    loadstring(game:HttpGet("https://github.com/weloskids-create/slap-duels/raw/refs/heads/main/Slap%20Duels"))()
-]]
-
-
-player.OnTeleport:Connect(function(teleportState)
-    if teleportState == Enum.TeleportState.Started and enableAutoReExec then
-        queue_on_teleport(reexecCode)
+-- Queue logic
+player.OnTeleport:Connect(function(state)
+    if state == Enum.TeleportState.Started then
+        queue_on_teleport([[
+            if getgenv().AutoReExec == true then
+                print("[AUTO] Re-running script after teleport")
+                loadstring(game:HttpGet("https://raw.githubusercontent.com/weloskids-create/slap-duels/refs/heads/main/slapduels2"))()
+            else
+                print("[AUTO] Skipped re-execution (AutoReExec = false)")
+            end
+        ]])
     end
 end)
