@@ -254,7 +254,7 @@ Tab:CreateToggle({
 
 -- The code that should run again after teleport
 local reexecCode = [[
-    loadstring(game:HttpGet("https://raw.githubusercontent.com/weloskids-create/slap-duels/refs/heads/main/slapduels2"))()
+    loadstring(game:HttpGet("https://github.com/weloskids-create/slap-duels/raw/refs/heads/main/Slap%20Duels"))()
 ]]
 
 
