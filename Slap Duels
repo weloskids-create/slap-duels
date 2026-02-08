@@ -245,14 +245,14 @@ Tab:CreateSection("Extra / Auto Execute")
 local enableAutoReExec = false
 
 Tab:CreateToggle({
-    Name = "Auto Re-Execute on Server Hop",
+    Name = "Auto Execute on Server Hop",
     CurrentValue = false,
     Callback = function(Value)
         enableAutoReExec = Value
     end
 })
 
--- The code that should run again after teleport
+
 local reexecCode = [[
     loadstring(game:HttpGet("https://github.com/weloskids-create/slap-duels/raw/refs/heads/main/Slap%20Duels"))()
 ]]
